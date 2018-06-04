@@ -12,7 +12,7 @@ namespace project.Controllers
 [HttpGet]
  public string Get()
         {
-            return "Hello world";
+            return "Welcome To Goa Vilas";
         }
 }
 }
