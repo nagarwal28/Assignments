@@ -1,0 +1,79 @@
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+  "Description" : "A VPC Trainee Project",
+  "Parameters" :{
+    "Product": {
+        "Type": "String",
+        "Description": "Product Name like Hotel/Car/Cart/Flight/Revenue/OCL"
+      },
+      "ApplicationName": {
+        "Type": "String",
+        "Description": "Application Name like Engine/USG"
+      },
+      "ApplicationType":{
+        "Type": "String",
+        "Description":"Type of service service/webservice/connector"
+      },
+      "HealthCheckPath": {
+        "Type": "String",
+        "Description": "Healthcheck Path of Service"
+    },
+    "VpcId": {
+        "Type": "AWS::EC2::VPC::Id",
+        "Description": "Select a VPC that allows instances to access the Internet."
+    },    
+	"ControllerPath": {
+		"Type": "String",
+		"Description": "ControllerPath of the ALB Listner Rule."
+    },
+    "Priority": {
+        "Type": "Number",
+        "Description": "Priority of the Service in ALB Listener Rules"
+    }
+  },
+  "Resources" : {   
+        "ECSTargetGroup":{
+        "Type":"AWS::ElasticLoadBalancingV2::TargetGroup",
+        "Properties":{
+          "HealthCheckIntervalSeconds":10,
+          "HealthCheckPath": {
+            "Ref": "HealthCheckPath"
+            },
+          "HealthCheckProtocol":"HTTP",
+          "HealthCheckPort" : "5000",
+          "HealthCheckTimeoutSeconds":5,
+          "HealthyThresholdCount":2,
+          "Name":{ "Fn::Join" : ["-",[{"Ref" : "Product"},{"Ref" : "ApplicationName"},{"Ref" : "ApplicationType"},"TG"]]},
+          "Port": "80",
+          "Protocol":"HTTP",
+          "UnhealthyThresholdCount":10,
+          "VpcId":{
+            "Ref":"VpcId"
+          }
+        }
+      },
+
+      "PrivateECSALBListenerRule": {
+        "Type": "AWS::ElasticLoadBalancingV2::ListenerRule",
+        "DependsOn": "ECSTargetGroup",
+        "Properties": {
+            "Actions": [{
+                "Type": "forward",
+                "TargetGroupArn": {
+                    "Ref": "ECSTargetGroup"
+                }
+            }],
+            "Conditions": [{
+                "Field": "path-pattern",
+                "Values": [{
+                    "Ref": "ControllerPath"
+                }]
+            }],
+            "ListenerArn":{"Fn::ImportValue": "NehaTestALBListener"},
+            "Priority": {
+                "Ref": "Priority"
+            }
+        }
+    }
+  }
+}

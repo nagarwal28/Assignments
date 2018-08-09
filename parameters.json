@@ -1,0 +1,30 @@
+[
+      {
+        "ParameterKey": "Product",
+        "ParameterValue": "Product"
+      },
+      {
+        "ParameterKey": "ApplicationName",
+        "ParameterValue": "ApplicationName"
+      },
+      {
+        "ParameterKey": "ApplicationType",
+        "ParameterValue":"ApplicationType"
+      },
+      {
+        "ParameterKey": "HealthCheckPath",
+        "ParameterValue": "HealthcheckPath"
+      },
+      {
+        "ParameterKey": "VpcId",
+        "ParameterValue": "VpcId"
+      },    
+	  {
+		"ParameterKey": "ControllerPath",
+		"ParameterValue": "ControllerPath"
+      },
+     {
+        "ParameterKey": "Priority",
+        "ParameterValue": "Priority"
+     }
+]
